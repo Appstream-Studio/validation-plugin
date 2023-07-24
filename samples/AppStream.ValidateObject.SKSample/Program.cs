@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 using AppStream.ValidateObject.SKSample;
 using AppStream.ValidateObject.SKSample.Settings;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,6 @@ internal sealed class Program
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.SetMinimumLevel(LogLevel.Trace);
-            builder.AddFilter("Microsoft", LogLevel.Information);
             builder.AddConsole();
         });
 
@@ -24,22 +24,42 @@ internal sealed class Program
             .WithChatCompletionService(appSettings.Kernel)
             .Build();
 
-        var isJsonValidPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("is_json_valid", new Uri(appSettings.AIPlugin.ManifestUrl));
+        await kernel.ImportChatGptPluginSkillFromUrlAsync("ValidateObject", new Uri(appSettings.AIPlugin.ManifestUrl));
         var planner = new SequentialPlanner(kernel);
 
         var logger = loggerFactory.CreateLogger<Program>();
         await RunExample("Is this a valid json? { \"foo\"dd: 1 }", kernel, planner, logger);
         await RunExample("Is this a valid json? { \"foo\": 1 }", kernel, planner, logger);
+
+        var jsonSchema = @"{
+  ""properties"":{
+    ""myProperty"":{
+      ""type"":""string"",
+      ""minLength"":10
+    }
+  },
+  ""required"":[""myProperty""]
+}";
+
+        await RunExample($"Does this json satisfy given schema? json: {{}}, schema: {jsonSchema}", kernel, planner, logger);
+        await RunExample($"Does this json satisfy given schema? json: {{\"myProperty\":false}}, schema: {jsonSchema}", kernel, planner, logger);
+        await RunExample($"Does this json satisfy given schema? json: {{\"myProperty\":\"some string\"}}, schema: {jsonSchema}", kernel, planner, logger);
+        await RunExample($"Does this json satisfy given schema? json: {{\"otherProperty\":35.4}}, schema: {jsonSchema}", kernel, planner, logger);
+        await RunExample($"Does this json satisfy given schema? json: \"nonObject\", schema: {jsonSchema}", kernel, planner, logger);
     }
 
     private static async Task RunExample(string question, IKernel kernel, SequentialPlanner planner, ILogger<Program> logger)
     {
-        logger.LogInformation("Question: " + question);
-
         var plan = await planner.CreatePlanAsync(question);
-        var result = await plan.InvokeAsync(kernel.CreateNewContext());
+        var sb = new StringBuilder("Plan:\n");
+        for (var i = 0; i < plan.Steps.Count; i++)
+        {
+            sb.AppendLine($"{i + 1}. {plan.Steps[i].Name}");
+        }
+        logger.LogInformation(sb.ToString());
 
-        logger.LogInformation("Result: " + result);
+        var result = await plan.InvokeAsync(kernel.CreateNewContext());
+        logger.LogInformation("Response: " + result);
     }
 
     private static AppSettings LoadConfiguration()

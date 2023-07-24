@@ -1,25 +1,20 @@
 ﻿using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace AppStream.ValidateObject.Plugin;
 
 public class AIPluginJson
 {
-    private readonly ILogger<AIPluginJson> _logger;
     private readonly AIPluginOptions _options;
 
-    public AIPluginJson(
-        ILogger<AIPluginJson> logger,
-        IOptions<AIPluginOptions> options)
+    public AIPluginJson(IOptions<AIPluginOptions> options)
     {
-        this._logger = logger;
         this._options = options.Value;
     }
 
-    [Function("get-ai-plugin-json")]
+    [Function("GetAIPluginJson")]
     public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
     {
         var response = req.CreateResponse(HttpStatusCode.OK);
