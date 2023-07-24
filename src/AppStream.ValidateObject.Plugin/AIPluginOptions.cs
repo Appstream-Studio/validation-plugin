@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace AppStream.Validation.Plugin;
+namespace AppStream.ValidateObject.Plugin;
 
 public class AIPluginOptions
 {

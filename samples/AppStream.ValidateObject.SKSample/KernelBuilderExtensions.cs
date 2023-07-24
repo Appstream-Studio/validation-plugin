@@ -1,7 +1,7 @@
-﻿using AppStream.Validation.SKSample.Settings;
+﻿using AppStream.ValidateObject.SKSample.Settings;
 using Microsoft.SemanticKernel;
 
-namespace AppStream.Validation.SKSample;
+namespace AppStream.ValidateObject.SKSample;
 
 internal static class KernelBuilderExtensions
 {

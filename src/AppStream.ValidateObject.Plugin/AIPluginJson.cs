@@ -4,7 +4,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AppStream.Validation.Plugin;
+namespace AppStream.ValidateObject.Plugin;
 
 public class AIPluginJson
 {

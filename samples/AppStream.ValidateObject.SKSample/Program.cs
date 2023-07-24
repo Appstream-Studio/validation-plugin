@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using AppStream.Validation.SKSample;
-using AppStream.Validation.SKSample.Settings;
+using AppStream.ValidateObject.SKSample;
+using AppStream.ValidateObject.SKSample.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;

@@ -1,5 +1,5 @@
-﻿using AppStream.Validation.Plugin;
-using AppStream.Validation.Plugin.OpenApi;
+﻿using AppStream.ValidateObject.Plugin;
+using AppStream.ValidateObject.Plugin.OpenApi;
 using Microsoft.Azure.Functions.Worker.Extensions.OpenApi.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

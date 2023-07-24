@@ -6,7 +6,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace AppStream.Validation.Plugin.Json;
+namespace AppStream.ValidateObject.Plugin.Json;
 
 public class JsonValidation
 {

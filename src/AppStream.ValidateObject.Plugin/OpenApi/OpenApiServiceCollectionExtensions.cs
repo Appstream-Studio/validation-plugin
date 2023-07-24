@@ -1,11 +1,12 @@
-﻿using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+﻿using AppStream.ValidateObject.Plugin;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
-namespace AppStream.Validation.Plugin.OpenApi;
+namespace AppStream.ValidateObject.Plugin.OpenApi;
 
 internal static class OpenApiServiceCollectionExtensions
 {

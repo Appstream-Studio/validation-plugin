@@ -1,4 +1,4 @@
-﻿namespace AppStream.Validation.SKSample.Settings;
+﻿namespace AppStream.ValidateObject.SKSample.Settings;
 
 internal sealed class KernelSettings
 {

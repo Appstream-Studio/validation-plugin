@@ -12,13 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppStream.Validation.Plugin", "src\AppStream.Validation.Plugin\AppStream.Validation.Plugin.csproj", "{D3D6EEB5-A343-437E-ADE5-8944E68F40E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppStream.ValidateObject.Plugin", "src\AppStream.ValidateObject.Plugin\AppStream.ValidateObject.Plugin.csproj", "{D3D6EEB5-A343-437E-ADE5-8944E68F40E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{FF0FA216-07A1-454C-862F-F0E69FC12D6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FFD4F4F4-4222-4EA0-ABB3-54DDA1BC1FF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppStream.Validation.SKSample", "samples\AppStream.Validation.SKSample\AppStream.Validation.SKSample.csproj", "{5B21FA43-9216-40D8-B365-881144E4D271}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppStream.ValidateObject.SKSample", "samples\AppStream.ValidateObject.SKSample\AppStream.ValidateObject.SKSample.csproj", "{5B21FA43-9216-40D8-B365-881144E4D271}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
