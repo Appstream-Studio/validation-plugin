@@ -1,33 +1,63 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Reflection;
+using AppStream.Validation.SKSample;
+using AppStream.Validation.SKSample.Settings;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Planning;
 
-var configRoot = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.local.json")
-    .Build();
-
-using var loggerFactory = LoggerFactory.Create(builder =>
+internal sealed class Program
 {
-    builder.SetMinimumLevel(LogLevel.Trace);
+    private static async Task Main(string[] args)
+    {
+        var appSettings = LoadConfiguration();
 
-    builder.AddFilter("Microsoft", LogLevel.Warning);
-    builder.AddFilter("System", LogLevel.Warning);
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.SetMinimumLevel(LogLevel.Trace);
+            builder.AddFilter("Microsoft", LogLevel.Information);
+            builder.AddConsole();
+        });
 
-    builder.AddConsole();
-});
+        var kernel = new KernelBuilder()
+            .WithLogger(loggerFactory.CreateLogger<Kernel>())
+            .WithChatCompletionService(appSettings.Kernel)
+            .Build();
 
-// load config
+        var isJsonValidPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("is_json_valid", new Uri(appSettings.AIPlugin.ManifestUrl));
+        var planner = new SequentialPlanner(kernel);
 
-var kernel = new KernelBuilder()
-    .WithLogger(loggerFactory.CreateLogger<Kernel>())
-    .WithOpenAIChatCompletionService("modelId", "apiKey")
-    .Build();
+        await RunExample("Is this a valid json? { \"foo\"dd: 1 }", kernel, planner);
+        await RunExample("Is this a valid json? { \"foo\": 1 }", kernel, planner);
+    }
 
-const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
-var isJsonValidPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("is-json-valid", new Uri(pluginManifestUrl));
+    private static async Task RunExample(string question, IKernel kernel, SequentialPlanner planner)
+    {
+        Console.WriteLine("Question: " + question);
 
-var planner = new StepwisePlanner(kernel);
-var question = "I have $2130.23. How much would I have after it grew by 24% and after I spent $5 on a latte?";
-var plan = planner.CreatePlan(question);
-var result = await plan.InvokeAsync(kernel.CreateNewContext());
+        var plan = await planner.CreatePlanAsync(question);
+        var result = await plan.InvokeAsync(kernel.CreateNewContext());
+
+        Console.WriteLine("Result: " + result);
+        Console.WriteLine();
+    }
+
+    private static AppSettings LoadConfiguration()
+    {
+        const string configFileName = "appsettings.local.json";
+        const string exampleConfigFileName = "appsettings.local.json.example";
+        var configRoot = new ConfigurationBuilder()
+            .AddJsonFile(configFileName, optional: false)
+            .AddUserSecrets(Assembly.GetExecutingAssembly(), optional: false)
+            .Build();
+
+        var appSettings = configRoot.Get<AppSettings>();
+        if (appSettings == null || appSettings.Kernel == null || appSettings.AIPlugin == null)
+        {
+            throw new InvalidDataException(
+                $"Invalid app settings in {configFileName}. Please provide settings based on the example in {exampleConfigFileName}.");
+        }
+
+        return appSettings;
+    }
+}

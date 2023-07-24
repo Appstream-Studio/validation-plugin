@@ -2,6 +2,7 @@
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace AppStream.Validation.Plugin.OpenApi;
@@ -10,19 +11,21 @@ internal static class OpenApiServiceCollectionExtensions
 {
     public static IServiceCollection AddOpenApiConfigurationOptions(this IServiceCollection services)
     {
-        return services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
+        return services.AddSingleton<IOpenApiConfigurationOptions>(sp =>
         {
+            var options = sp.GetRequiredService<IOptions<AIPluginOptions>>().Value;
+
             return new OpenApiConfigurationOptions
             {
                 Info = new OpenApiInfo
                 {
-                    Version = "1.0.0",
-                    Title = "AI validation plugin",
-                    Description = "[ChatGPT](https://openai.com/blog/chatgpt-plugins)/[Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins?tabs=Csharp) plugin for validating JSONs or XMLs.",
+                    Version = options.SchemaVersion,
+                    Title = options.NameForHuman,
+                    Description = options.DescriptionForHuman,
                     Contact = new OpenApiContact()
                     {
                         Name = "Enquiry",
-                        Email = "contact@appstream.studio",
+                        Email = options.ContactEmail,
                         Url = new Uri("https://github.com/Azure/azure-functions-openapi-extension/issues"),
                     },
                     License = new OpenApiLicense()

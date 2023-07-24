@@ -262,3 +262,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/.vs/AppStream.Validation/DesignTimeBuild/.dtbcache.v2
+/samples/AppStream.Validation.SKSample/appsettings.local.json

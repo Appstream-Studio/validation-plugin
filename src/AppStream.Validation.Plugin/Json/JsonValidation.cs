@@ -6,18 +6,18 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace AppStream.Validation.Plugin;
+namespace AppStream.Validation.Plugin.Json;
 
-public class IsValidJson
+public class JsonValidation
 {
-    public const string FunctionName = "is-json-valid";
+    public const string FunctionName = "is_json_valid";
     private const string _jsonQueryParameterName = "json";
 
-    private readonly ILogger _logger;
+    private readonly ILogger<JsonValidation> _logger;
 
-    public IsValidJson(ILoggerFactory loggerFactory)
+    public JsonValidation(ILogger<JsonValidation> logger)
     {
-        this._logger = loggerFactory.CreateLogger<IsValidJson>();
+        this._logger = logger;
     }
 
     [Function(FunctionName)]
@@ -27,37 +27,40 @@ public class IsValidJson
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the error of the input.")]
     public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
     {
+        var response = req.CreateResponse();
+        response.Headers.Add("Content-Type", "text/plain");
+
         string? json = req.Query[_jsonQueryParameterName];
         if (json == null)
         {
-            HttpResponseData response = req.CreateResponse(HttpStatusCode.BadRequest);
-            response.Headers.Add("Content-Type", "text/plain");
+            response.StatusCode = HttpStatusCode.BadRequest;
             response.WriteString($"Required query parameter '{_jsonQueryParameterName}' is missing.");
-
-            return response;
         }
         else
         {
-            bool isValid = this.IsValid(json);
+            response.StatusCode = HttpStatusCode.OK;
 
-            HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain");
-            response.WriteString(isValid.ToString());
+            var result = this.IsValid(json);
+            var responseContent = result.IsValid
+                ? "This is a valid JSON."
+                : $"This is not a valid JSON - parsing has failed (error: {result.ExceptionMessage}).";
 
-            return response;
+            response.WriteString(responseContent);
         }
+
+        return response;
     }
 
-    private bool IsValid(string value)
+    private (bool IsValid, string? ExceptionMessage) IsValid(string value)
     {
         try
         {
             JsonDocument.Parse(value);
-            return true;
+            return (true, null);
         }
-        catch (JsonException)
+        catch (JsonException e)
         {
-            return false;
+            return (false, e.Message);
         }
     }
 }
