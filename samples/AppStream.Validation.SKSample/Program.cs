@@ -27,19 +27,19 @@ internal sealed class Program
         var isJsonValidPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("is_json_valid", new Uri(appSettings.AIPlugin.ManifestUrl));
         var planner = new SequentialPlanner(kernel);
 
-        await RunExample("Is this a valid json? { \"foo\"dd: 1 }", kernel, planner);
-        await RunExample("Is this a valid json? { \"foo\": 1 }", kernel, planner);
+        var logger = loggerFactory.CreateLogger<Program>();
+        await RunExample("Is this a valid json? { \"foo\"dd: 1 }", kernel, planner, logger);
+        await RunExample("Is this a valid json? { \"foo\": 1 }", kernel, planner, logger);
     }
 
-    private static async Task RunExample(string question, IKernel kernel, SequentialPlanner planner)
+    private static async Task RunExample(string question, IKernel kernel, SequentialPlanner planner, ILogger<Program> logger)
     {
-        Console.WriteLine("Question: " + question);
+        logger.LogInformation("Question: " + question);
 
         var plan = await planner.CreatePlanAsync(question);
         var result = await plan.InvokeAsync(kernel.CreateNewContext());
 
-        Console.WriteLine("Result: " + result);
-        Console.WriteLine();
+        logger.LogInformation("Result: " + result);
     }
 
     private static AppSettings LoadConfiguration()
