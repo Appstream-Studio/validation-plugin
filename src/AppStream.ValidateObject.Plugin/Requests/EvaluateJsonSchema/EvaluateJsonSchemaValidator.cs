@@ -39,14 +39,10 @@ internal sealed class EvaluateJsonSchemaValidator : AbstractValidator<EvaluateJs
             await JsonSchema.FromJsonAsync(jsonSchema, ct);
             return true;
         }
-        catch (Exception e)
+        catch (Exception e) when (e is JsonException || e is InvalidOperationException)
         {
-            if (e is JsonException || e is InvalidOperationException)
-            {
-                context.MessageFormatter.AppendArgument("ErrorMessage", e.Message);
-                return false;
-            }
-            throw;
+            context.MessageFormatter.AppendArgument("ErrorMessage", e.Message);
+            return false;
         }
     }
 }
