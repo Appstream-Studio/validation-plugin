@@ -1,11 +1,10 @@
 # ValidateObject - ChatGPT / Semantic Kernel Plugin
 
-
-**ValidateObject** is a powerful tool introduced for the SK Hackathon #1, hosted by Microsoft. [Learn more about the hackathon](https://devblogs.microsoft.com/semantic-kernel/%F0%9F%93%A2-announcing-the-semantic-kernel-plugins-hackathon/).
+**ValidateObject** is a plugin introduced for the SK Hackathon #1, hosted by Microsoft. [Learn more about the hackathon](https://devblogs.microsoft.com/semantic-kernel/%F0%9F%93%A2-announcing-the-semantic-kernel-plugins-hackathon/).
 
 ## Overview
 
-**ValidateObject** is an essential component designed to work seamlessly with chatGPT and Semantic Kernel. Its primary function is to validate the format of an object. As we navigate the complex world of language models, particularly in the context of the Schillace Laws, especially under the `Trade-offs And Challenges When Using LLMs` group (as introduced by John Maede), ensuring the intersection between the model and conventional code is error-free can be quite challenging. 
+**ValidateObject** is an essential component designed to work seamlessly with ChatGPT and Semantic Kernel. Its primary function is to bridge the gap between the LLM model and conventional programming. It achieves this by validating the format of an object. As we know from Schillace Laws, ensuring the intersection between the model and conventional code is error-free can be quite challenging.
 
 Our blog post, [Schillace Laws: Part 3](https://appstream.studio/blog/schillace-laws-part-3), delves deeper into this topic, highlighting the importance of validation in building robust systems.
 
