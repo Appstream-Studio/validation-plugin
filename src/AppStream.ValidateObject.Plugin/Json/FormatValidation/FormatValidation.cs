@@ -3,7 +3,6 @@ using System.Text.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace AppStream.ValidateObject.Plugin.Json.FormatValidation;
@@ -13,20 +12,20 @@ public class FormatValidation
     public const string FunctionName = "ValidateJsonFormat";
 
     [Function(FunctionName)]
-    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "Checks if a string is a valid JSON.")]
-    [OpenApiRequestBody("text/plain", typeof(string), Description = "String to be examined.", Required = true)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns plain text information about whether the input string is a valid JSON or not.")]
+    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "Checks if provided JSON string is valid.")]
+    [OpenApiParameter(name: "json", Description = "escaped JSON to validate it's format", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns information about whether the input string is a valid JSON and error list in case it's not.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the error of the input.")]
-    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
+    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
     {
         var response = req.CreateResponse();
         response.Headers.Add("Content-Type", "text/plain");
 
-        var json = req.ReadAsString();
+        var json = req.Query["json"];
         if (json == null)
         {
             response.StatusCode = HttpStatusCode.BadRequest;
-            response.WriteString("Request body is empty.");
+            response.WriteString("JSON parameter is missing in query.");
         }
         else
         {
