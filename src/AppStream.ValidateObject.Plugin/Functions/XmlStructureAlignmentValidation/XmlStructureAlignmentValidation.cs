@@ -22,9 +22,9 @@ public class XmlStructureAlignmentValidation
     }
 
     [Function(FunctionName)]
-    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "When provided with two XML objects - checks if their structure is identical.")]
-    [OpenApiParameter(name: "xml1", Description = "First escaped XML object", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
-    [OpenApiParameter(name: "xml2", Description = "Second escaped XML object", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
+    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "When provided with two XML objects that are not XML schema - checks if their structure is identical.")]
+    [OpenApiParameter(name: "xml1", Description = "First escaped XML object to verify", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
+    [OpenApiParameter(name: "xml2", Description = "Second escaped XML object that is a sample XML to verify against", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns plain text information about whether given XML objects' structures are identical.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the error of the input.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req, ILogger logger)
