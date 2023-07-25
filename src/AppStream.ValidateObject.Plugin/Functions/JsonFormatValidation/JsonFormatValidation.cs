@@ -20,7 +20,7 @@ public class JsonFormatValidation
     }
 
     [Function(FunctionName)]
-    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "When there is no JSON schema provided - check if it's a correct JSON.")]
+    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "When there is no JSON schema provided - checks if provided string is a correct JSON.")]
     [OpenApiParameter(name: "json", Description = "Escaped JSON to validate it's format", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns information about whether the input string is a valid JSON and error list in case it's not.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the error of the input.")]
