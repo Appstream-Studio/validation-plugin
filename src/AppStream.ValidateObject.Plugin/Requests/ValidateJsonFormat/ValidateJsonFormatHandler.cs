@@ -7,14 +7,17 @@ internal sealed class ValidateJsonFormatHandler : IRequestHandler<ValidateJsonFo
 {
     public Task<JsonFormatValidationResult> Handle(ValidateJsonFormat request, CancellationToken cancellationToken)
     {
+        JsonFormatValidationResult result;
         try
         {
             JsonDocument.Parse(request.Json);
-            return Task.FromResult(new JsonFormatValidationResult(true, null));
+            result = new JsonFormatValidationResult(true, null);
         }
         catch (JsonException e)
         {
-            return Task.FromResult(new JsonFormatValidationResult(false, e.Message));
+            result = new JsonFormatValidationResult(false, e.Message);
         }
+
+        return Task.FromResult(result);
     }
 }
