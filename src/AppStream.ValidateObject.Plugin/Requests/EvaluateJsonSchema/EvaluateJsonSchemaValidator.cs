@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using FluentValidation;
-using Json.Schema;
+using NJsonSchema;
 
 namespace AppStream.ValidateObject.Plugin.Requests.EvaluateJsonSchema;
 
@@ -14,7 +14,7 @@ internal sealed class EvaluateJsonSchemaValidator : AbstractValidator<EvaluateJs
             .WithMessage("'{PropertyName}' must be a valid JSON ({ErrorMessage}).");
 
         this.RuleFor(r => r.JsonSchema).NotNull().NotEmpty()
-            .Must(this.IsValidJsonSchema)
+            .MustAsync(this.IsValidJsonSchema)
             .WithMessage("'{PropertyName}' must be a valid JSON schema ({ErrorMessage}).");
     }
 
@@ -32,11 +32,11 @@ internal sealed class EvaluateJsonSchemaValidator : AbstractValidator<EvaluateJs
         }
     }
 
-    private bool IsValidJsonSchema(EvaluateJsonSchema root, string jsonSchema, ValidationContext<EvaluateJsonSchema> context)
+    private async Task<bool> IsValidJsonSchema(EvaluateJsonSchema root, string jsonSchema, ValidationContext<EvaluateJsonSchema> context, CancellationToken ct)
     {
         try
         {
-            JsonSchema.FromText(jsonSchema);
+            await JsonSchema.FromJsonAsync(jsonSchema, ct);
             return true;
         }
         catch (JsonException e)

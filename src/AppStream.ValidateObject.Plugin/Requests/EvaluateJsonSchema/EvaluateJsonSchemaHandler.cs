@@ -1,27 +1,23 @@
-﻿using System.Text.Json.Nodes;
-using Json.Schema;
-using MediatR;
+﻿using MediatR;
+using NJsonSchema;
+using NJsonSchema.Validation;
 
 namespace AppStream.ValidateObject.Plugin.Requests.EvaluateJsonSchema;
 
 internal sealed class EvaluateJsonSchemaHandler : IRequestHandler<EvaluateJsonSchema, JsonSchemaEvaluationResult>
 {
-    public Task<JsonSchemaEvaluationResult> Handle(EvaluateJsonSchema request, CancellationToken cancellationToken)
+    public async Task<JsonSchemaEvaluationResult> Handle(EvaluateJsonSchema request, CancellationToken cancellationToken)
     {
-        var schema = JsonSchema.FromText(request.JsonSchema);
-        var jsonNode = JsonNode.Parse(request.JsonInstance);
+        var schema = await JsonSchema.FromJsonAsync(request.JsonSchema);
+        var validator = new JsonSchemaValidator();
+        var errors = validator.Validate(request.JsonInstance, schema);
 
-        var evaluationResult = schema.Evaluate(jsonNode, new EvaluationOptions { OutputFormat = OutputFormat.List });
-
-        string? errorMessage = null;
-        if (evaluationResult.HasDetails)
-        {
-            var errors = evaluationResult.Details.Where(d => d.HasErrors);
-            var formattedErrors = errors.Select(e => $"- {e.InstanceLocation}: {string.Join("; ", e.Errors!.Values)}");
-
-            errorMessage = string.Join("\n", formattedErrors);
-        }
-
-        return Task.FromResult(new JsonSchemaEvaluationResult(evaluationResult.IsValid, errorMessage));
+        return new JsonSchemaEvaluationResult(
+            IsValid: !errors.Any(),
+            Errors: errors
+                .Select(e => new JsonSchemaEvaluationError(
+                    Path: e.Path,
+                    Error: e.Kind.ToString()))
+                .ToArray());
     }
 }

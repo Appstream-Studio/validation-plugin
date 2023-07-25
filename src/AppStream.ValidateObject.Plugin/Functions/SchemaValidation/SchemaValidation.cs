@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 using AppStream.ValidateObject.Plugin.Requests.EvaluateJsonSchema;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -32,19 +33,33 @@ public class SchemaValidation
         var jsonSchema = req.Query["jsonSchema"];
 
         var request = new EvaluateJsonSchema(jsonInstance!, jsonSchema!);
-        var result = await this._mediator.Send(request);
-        var responseContent = result.IsValid
-            ? "This JSON satisfies given JSON schema."
-            : "This JSON does not satisfy given JSON schema.";
-        if (!result.IsValid && !string.IsNullOrWhiteSpace(result.ErrorMessage))
-        {
-            responseContent += $" Here are the errors:\n{result.ErrorMessage}";
-        }
+        var validationResult = await this._mediator.Send(request);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain");
-        response.WriteString(responseContent);
+        response.WriteString(FormatResponse(validationResult));
 
         return response;
+    }
+
+    private static string FormatResponse(JsonSchemaEvaluationResult validationResult)
+    {
+        var responseContent = validationResult.IsValid
+            ? "This JSON satisfies given JSON schema."
+            : "This JSON does not satisfy given JSON schema.";
+
+        if (!validationResult.IsValid && validationResult.Errors.Any())
+        {
+            var sb = new StringBuilder(responseContent);
+            sb.AppendLine(" Here are the errors in (path, error) format:");
+            foreach (var error in validationResult.Errors)
+            {
+                sb.AppendLine($"- ({error.Path}, {error.Error})");
+            }
+
+            responseContent = sb.ToString();
+        }
+
+        return responseContent;
     }
 }
