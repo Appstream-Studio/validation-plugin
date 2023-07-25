@@ -8,15 +8,15 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace AppStream.ValidateObject.Plugin.Functions.StructureAlignmentValidation;
+namespace AppStream.ValidateObject.Plugin.Functions.JsonStructureAlignmentValidation;
 
-public class StructureAlignmentValidation
+public class JsonStructureAlignmentValidation
 {
     public const string FunctionName = "ValidateJsonsStructureAlignment";
 
     private readonly IMediator _mediator;
 
-    public StructureAlignmentValidation(IMediator mediator)
+    public JsonStructureAlignmentValidation(IMediator mediator)
     {
         this._mediator = mediator;
     }
