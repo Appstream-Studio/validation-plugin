@@ -22,9 +22,9 @@ public class JsonStructureAlignmentValidation
     }
 
     [Function(FunctionName)]
-    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "When provided with two JSON objects - checks if their structure is identical.")]
-    [OpenApiParameter(name: "json1", Description = "First escaped JSON object", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
-    [OpenApiParameter(name: "json2", Description = "Second escaped JSON object", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
+    [OpenApiOperation(operationId: FunctionName, tags: new[] { "ExecuteFunction" }, Description = "When provided with two JSON objects that are not JSON schema - checks if their structure is identical.")]
+    [OpenApiParameter(name: "json1", Description = "First escaped JSON object that is a sample JSON to verify against", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
+    [OpenApiParameter(name: "json2", Description = "Second escaped JSON object to verify", Type = typeof(string), In = ParameterLocation.Query, Required = true)]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns plain text information about whether given JSON objects' structures are identical.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the error of the input.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req, ILogger logger)
