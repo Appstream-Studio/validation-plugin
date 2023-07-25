@@ -4,7 +4,10 @@
 
 ## Overview
 
+
 **ValidateObject** is an essential component designed to work seamlessly with ChatGPT and Semantic Kernel. Its primary function is to bridge the gap between the LLM model and conventional programming. It achieves this by validating the format of an object. As we know from Schillace Laws, ensuring the intersection between the model and conventional code is error-free can be quite challenging.
+
+https://github.com/Appstream-Studio/validation-plugin/assets/129273558/ca58d6a7-e2de-4166-b39d-c17cb767bdb4
 
 Our blog post, [Schillace Laws: Part 3](https://appstream.studio/blog/schillace-laws-part-3), delves deeper into this topic, highlighting the importance of validation in building robust systems.
 
@@ -21,3 +24,4 @@ Our blog post, [Schillace Laws: Part 3](https://appstream.studio/blog/schillace-
 ## Why Use ValidateObject?
 
 Using large language models (LLMs) involves striking a balance between leverage and precision. To mitigate the risks of building a brittle system, it's essential to have a diverse toolbox at your disposal. **ValidateObject** provides you with an additional tool to confidently address these challenges.
+
