@@ -8,15 +8,15 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace AppStream.ValidateObject.Plugin.Functions.SchemaValidation;
+namespace AppStream.ValidateObject.Plugin.Functions.JsonSchemaValidation;
 
-public class SchemaValidation
+public class JsonSchemaValidation
 {
     public const string FunctionName = "ValidateJsonAgainstSchema";
 
     private readonly IMediator _mediator;
 
-    public SchemaValidation(IMediator mediator)
+    public JsonSchemaValidation(IMediator mediator)
     {
         this._mediator = mediator;
     }

@@ -6,15 +6,15 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.OpenApi.Models;
 
-namespace AppStream.ValidateObject.Plugin.Functions.FormatValidation;
+namespace AppStream.ValidateObject.Plugin.Functions.JsonFormatValidation;
 
-public class FormatValidation
+public class JsonFormatValidation
 {
     public const string FunctionName = "ValidateJsonFormat";
 
     private readonly IMediator _mediator;
 
-    public FormatValidation(IMediator mediator)
+    public JsonFormatValidation(IMediator mediator)
     {
         this._mediator = mediator;
     }
