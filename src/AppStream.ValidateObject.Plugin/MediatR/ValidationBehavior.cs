@@ -22,7 +22,8 @@ internal sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavio
 
         var context = new ValidationContext<TRequest>(request);
         var errorsDictionary = this._validators
-            .Select(x => x.Validate(context))
+            .Select(async x => await x.ValidateAsync(context, cancellationToken))
+            .Select(t => t.Result)
             .SelectMany(x => x.Errors)
             .Where(x => x != null)
             .ToArray();

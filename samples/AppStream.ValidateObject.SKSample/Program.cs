@@ -32,14 +32,14 @@ internal sealed class Program
         await RunExample("Is this a valid json? { \"foo\": 1 }", kernel, planner, logger);
 
         var jsonSchema = @"{
-  ""properties"":{
-    ""myProperty"":{
-      ""type"":""string"",
-      ""minLength"":10
-    }
-  },
-  ""required"":[""myProperty""]
-}";
+          ""properties"":{
+            ""myProperty"":{
+              ""type"":""string"",
+              ""minLength"":10
+            }
+          },
+          ""required"":[""myProperty""]
+        }";
 
         await RunExample($"Does this json satisfy given schema? json: {{}}, schema: {jsonSchema}", kernel, planner, logger);
         await RunExample($"Does this json satisfy given schema? json: {{\"myProperty\":false}}, schema: {jsonSchema}", kernel, planner, logger);
